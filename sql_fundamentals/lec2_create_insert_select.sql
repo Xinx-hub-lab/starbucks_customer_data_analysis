@@ -1,6 +1,8 @@
-CREATE  SCHEMA SQL_BOOTCAMP;
+
+
+CREATE  SCHEMA Exercise1;
 -- sepecify the schema you want to use
-USE SQL_BOOTCAMP;
+USE Exercise1;
 
 -- create table with column value and data type
 CREATE TABLE Customer(

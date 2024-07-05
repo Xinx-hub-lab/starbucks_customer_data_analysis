@@ -7,7 +7,7 @@
 
 
 
-USE SQL_BOOTCAMP;
+USE Exercise1;
 -- direct to the right library, otherwise when referring a dataset, you have to use 'SQL_BOOTCAMP.customer' instead of just 'customer'
 
 
@@ -109,7 +109,8 @@ SELECT * FROM customer WHERE  customer_email  LIKE 'c%m'; -- 'c%m' start with c 
 
 SELECT * FROM customer WHERE  `customer_first-name`  LIKE 'K_ll___ey'; 
 
-SELECT * FROM customer ;
+SELECT * FROM customer;
+
 
 SELECT * FROM product;
 
