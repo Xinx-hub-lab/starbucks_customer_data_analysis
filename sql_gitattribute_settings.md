@@ -1,8 +1,11 @@
 
 # How SQL can show in the GitHub language statistics bar?
 
-The idea is to create a `.gitattributes` file that contains settings regarding SQL.
-The settings will apply to this **single repository** but **globally**.
+> [!NOTE]
+> The idea is to create a `.gitattributes` file that contains settings regarding SQL. \\
+> The settings will apply to this **single repository** but **globally**.
+
+
 
 ### 1. Navigate to the repository in terminal
 
