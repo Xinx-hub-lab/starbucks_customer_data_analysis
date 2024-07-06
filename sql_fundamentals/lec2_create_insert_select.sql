@@ -1,7 +1,7 @@
 
 
 CREATE  SCHEMA Exercise1;
--- sepecify the schema you want to use
+-- specify the schema you want to use
 USE Exercise1;
 
 -- create table with column value and data type

@@ -2,7 +2,7 @@
 ###########################################################################################################
 #######################################   Project : Starbucks Customer Data    #####################################
 ###########################################################################################################
-CREATE schema project;
+CREATE SCHEMA project;
 USE project;
 
 
@@ -12,7 +12,6 @@ USE project;
 ### PROTFOLIO TABLE ###
 ##########################
 
-#############################################################################################
 -- preprocess and create new table
 	-- one hot encoding for channels column
 	-- upper case + trim for offer_type
@@ -49,7 +48,6 @@ SELECT * FROM portfolio_proc;
 ### PROFILE TABLE ###
 ##########################
 
-#############################################################################################
 -- inspectation
 SELECT * FROM profile;
 SELECT DISTINCT gender FROM profile;
@@ -71,8 +69,10 @@ SELECT became_member_on, YEAR(CAST(became_member_on AS date)) FROM profile;
 SELECT income, CAST(income AS signed) FROM profile;  -- change to 0 automatically after converted to signed
 SELECT income, CAST(NULLIF(income, '') AS signed) FROM profile; -- change to NULL with NULLIF()
     
-   
-#############################################################################################
+
+
+
+
 -- preprocessing and create a new table
 	-- replace empty strings to 'U' for gender, trim(), UPPER()
     -- became_member convert to date and extract year
@@ -101,7 +101,7 @@ WHERE age != 118;
 	-- delete 2175 records with age = 118, as these customers provides no info in gender and income
 
 
-#############################################################################################
+
 -- view processed profile dataset
 SELECT * FROM profile_proc;
 SELECT COUNT(DISTINCT customer_id) FROM profile_proc; -- check if there is duplicated record
@@ -113,7 +113,7 @@ SELECT COUNT(DISTINCT customer_id) FROM profile_proc; -- check if there is dupli
 ### TRANSCRIPT TABLE ###
 ##########################
 
-#############################################################################################
+
 -- inspectation
 SELECT * FROM transcript;
 
@@ -155,7 +155,7 @@ GROUP BY person
 HAVING SUM(JSON_EXTRACT(VALUE, '$.amount')) > 100; -- WHERE is executed before GROUP BY; order is WHERE, GROUP BY, HAVING, SELECT
 
 
-#############################################################################################
+
 -- preprocessing and create a new table
 	-- turn JSON columns to columns, delete the quotes "" that were also extracted
 DROP TABLE transcript_proc;
@@ -175,7 +175,7 @@ WHERE person IN (SELECT customer_id FROM profile_proc);
 	-- COALESCE: create a column with var1 as value, if NULL then use var2 as the value, otherwise NULL
 
 
-#############################################################################################
+
 -- view processed transcript dataset
 SELECT * FROM transcript_proc;
 SELECT * FROM transcript_proc WHERE customer_id = '94de646f7b6041228ca7dec82adb97d2';
@@ -183,7 +183,7 @@ SELECT * FROM transcript_proc WHERE customer_id = '94de646f7b6041228ca7dec82adb9
 SELECT customer_id, COUNT(*) FROM transcript_proc GROUP BY customer_id ORDER BY COUNT(*) DESC;
 
 
-#############################################################################################
+
 -- preprocessing step 2: 
 	-- try if time column can be converted to datetime
 CREATE TABLE transcript_proc_temp AS

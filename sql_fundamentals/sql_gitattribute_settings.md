@@ -1,31 +1,40 @@
 
-1. Navigate to the repository in terminal:
+# How SQL can show in the GitHub language statistics bar?
 
-2. Create the .gitattributes file:
-You can use any text editor to create or edit the .gitattributes file. 
+The idea is to create a `.gitattributes` file that contains settings regarding SQL.
+
+The settings will apply to this single repository but globally.
+
+### 1. Navigate to the repository in terminal
+
+### 2. Create the `.gitattributes` file
+Use a random text editor to create or edit the `.gitattributes` file. Below is an example of using terminal to create one.
 
 ```bash
 nano .gitattributes
 ```
 
-3. Edit the .gitattributes file:
+### 3. Edit the `.gitattributes` file
+
 Add the following lines for linguist settings:
+
 ```bash
 *.sql linguist-detectable=true
 *.sql linguist-language=sql
 ```
-Save and exit the editor (Ctrl+O to save, then click Enter, then Ctrl+X to exit).
+Save and exit the editor (`Ctrl+O` to save, then click `Enter`, then `Ctrl+X` to exit).
 
-4. Add the .gitattributes File to Git:
+### 4. Add the `.gitattributes` file to Git
 ```bash
 git add .gitattributes
 ```
 
-5. Commit and Push:
+### 5. Commit and Push the `.gitattributes`
 ```bash
 git commit -m "Add .gitattributes to detect and classify .sql files correctly"
 git push origin main
 ```
 
-References:
-Github issue 348: https://github.com/github/markup/issues/348
+
+### References
+This tutorial is based on answers from [Github issue 348](https://github.com/github/markup/issues/348).

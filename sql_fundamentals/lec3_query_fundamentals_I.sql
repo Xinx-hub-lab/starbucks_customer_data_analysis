@@ -11,6 +11,7 @@ USE Exercise1;
 -- direct to the right library, otherwise when referring a dataset, you have to use 'SQL_BOOTCAMP.customer' instead of just 'customer'
 
 
+
 /* SELECT; DISTINCT; COUNT; WHERE; ORDER BY*/
 SELECT * FROM customer ; 
 -- SELECT all records (*)
@@ -38,18 +39,20 @@ SELECT * FROM product WHERE product_category='Coffee' OR product_type='Drip coff
 SELECT * FROM product WHERE product_category='Loose Tea' AND (product_type='Black Tea' OR product_type='Chia Tea' );
 
 SELECT * FROM product WHERE product_category IN ('Coffee','Tea');
--- values FROM a SET
+-- values from a SET
 
 SELECT * FROM product WHERE product_category NOT IN ('Coffee','Tea');
  
 SELECT * FROM customer ORDER BY birth_year DESC, customer_since DESC;
--- ORDER BY default is ascendINg ORDER
+-- ORDER BY default is ascending order
 
 SELECT * FROM customer WHERE home_store= 5 ORDER BY birth_year DESC LIMIT 5; 
 -- LIMIT 5 is similar to head(5)
 -- ORDER BY has to be written before LIMIT
 
 SELECT * FROM customer;
+
+
 
 
 
@@ -73,6 +76,8 @@ DROP TABLE Customer_Sample;
 -- delete the whole table, the container / table itself disappear
 
 
+
+
 /* Functions and Clauses: COUNT; MAX; SUM; LIKE */
 SELECT MAX(birth_year) FROM customer;
 
@@ -90,19 +95,19 @@ WHERE TABLE_NAME ='product';
 -- find the number of columns of a dataset
 
 
-
 SELECT * FROM customer WHERE  upper(`customer_first-name`)  LIKE '%WA%'; 
--- 'K%' start with K ; '%elly' end with elly ; '
+-- 'K%' start with K ; '%elly' end with elly 
 
 SELECT * FROM customer WHERE  customer_email LIKE '%.edu'; 
--- fINd customer as a student
+-- find customer as a student
 
 SELECT * FROM customer WHERE  customer_email NOT LIKE 'A%s'; 
 -- 'A%s' start with A and end with s
 
 SELECT * FROM customer WHERE  customer_email  LIKE 'n__%';  
--- LIKE is NOT case sensitive, A and a are the same
--- experiment with the followINg:
+-- LIKE is not case sensitive, A and a are the same
+
+-- experiment with the following:
 	-- SELECT * FROM customer WHERE upper(customer_email)  LIKE '_a%';  
 
 SELECT * FROM customer WHERE  customer_email  LIKE 'c%m'; -- 'c%m' start with c and end with m

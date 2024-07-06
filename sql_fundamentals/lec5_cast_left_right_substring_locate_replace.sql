@@ -51,7 +51,7 @@ SELECT COUNT(DISTINCT birthdate_year) FROM(
 		YEAR(CAST( birthdate AS date )) AS birthdate_year
 	FROM customer
 ) AS a ;
--- you have to name the new datASet created by subquery that follows the FROM
+-- you have to name the new dataset created by subquery that follows the FROM
 
 -- approach 3 : LEFT(string, number_of_chars)
 SELECT birthdate, LEFT(birthdate,4) AS birthdate_yr FROM customer; 
