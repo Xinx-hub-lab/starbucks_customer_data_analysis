@@ -6,7 +6,7 @@ CREATE SCHEMA project;
 USE project;
 
 
-
+/* PREPROCESSING / CLEANING */
 
 ##########################
 ### PROTFOLIO TABLE ###
@@ -37,6 +37,7 @@ FROM(
 ) 
 AS process_table1;
 
+
 -- view the processed dataset
 SELECT * FROM portfolio_proc;
 
@@ -52,44 +53,30 @@ SELECT * FROM portfolio_proc;
 SELECT * FROM profile;
 SELECT DISTINCT gender FROM profile;
 
-	-- replace empty strings to 'U' for gender, trim(), UPPER()
-SELECT 
-	*,
-	CASE WHEN gender IN ('F','M','O') THEN trim(UPPER(gender)) ELSE 'U' END AS gender_proc
-FROM profile;
 
-	-- update table with column name rename (not recommended)
--- alter table profile RENAME COLUMN id TO customer_id;
 
-	-- became_member convert date
-SELECT became_member_on, CAST(became_member_on AS date) FROM profile;
-SELECT became_member_on, YEAR(CAST(became_member_on AS date)) FROM profile;
+-- there will be error: ERROR CODE 1292 Truncated incorrect INTEGER value: '' when creating the new table
+-- need to turn off mysql strict mode 
+-- refer to (https://stackoverflow.com/questions/40881773/how-to-turn-on-off-mysql-strict-mode-in-localhost-xampp)
 
-	-- change income to int or float, replace empty strings '' with NULL or 0
-SELECT income, CAST(income AS signed) FROM profile;  -- change to 0 automatically after converted to signed
-SELECT income, CAST(NULLIF(income, '') AS signed) FROM profile; -- change to NULL with NULLIF()
-    
+-- if we see STRICT_TRANS_TABLES, then it's in strict mode
+SHOW VARIABLES LIKE 'sql_mode';  
+
+-- turn off strict mode
+set sql_mode='NO_ENGINE_SUBSTITUTION'; 
 
 
 
 
 -- preprocessing and create a new table
-	-- replace empty strings to 'U' for gender, trim(), UPPER()
+	-- replace empty strings to 'U' for gender, TRIM(), UPPER(), the order of TRIM and UPPER does not matter
     -- became_member convert to date and extract year
     -- change income to int or float, replace empty strings '' with NULL or 0, generate both in case they are both needed
 	-- rename the columns
-    
-	-- there will be error: ERROR CODE 1292 Truncated incorrect INTEGER value: '' 
-	-- need to turn off mysql strict mode 
-    -- refer to (https://stackoverflow.com/questions/40881773/how-to-turn-on-off-mysql-strict-mode-in-localhost-xampp)
-
-SHOW VARIABLES LIKE 'sql_mode';  -- if we see STRICT_TRANS_TABLES, then it's in stict mode
-set sql_mode='NO_ENGINE_SUBSTITUTION'; -- turn off strict mode
-
 DROP TABLE profile_proc;
 CREATE TABLE profile_proc AS
 SELECT
-	CASE WHEN gender IN ('F','M','O') THEN trim(UPPER(gender)) ELSE 'U' END AS gender,
+	CASE WHEN gender IN ('F','M','O') THEN TRIM(UPPER(gender)) ELSE 'U' END AS gender,
     age,
     id AS customer_id,
     CAST(became_member_on AS date) AS became_member_on,
@@ -98,13 +85,14 @@ SELECT
     CAST(NULLIF(income, '') AS signed) AS income_null
 FROM profile
 WHERE age != 118;
-	-- delete 2175 records with age = 118, as these customers provides no info in gender and income
-
+-- delete 2175 records with age = 118, as these customers provides no info in gender and income
 
 
 -- view processed profile dataset
 SELECT * FROM profile_proc;
-SELECT COUNT(DISTINCT customer_id) FROM profile_proc; -- check if there is duplicated record
+
+-- check if there are duplicated records
+SELECT COUNT(DISTINCT customer_id) FROM profile_proc; 
 
 
 
@@ -117,35 +105,39 @@ SELECT COUNT(DISTINCT customer_id) FROM profile_proc; -- check if there is dupli
 -- inspectation
 SELECT * FROM transcript;
 
-	-- see the unique json keys
+-- see the unique json keys
 SELECT DISTINCT JSON_KEYS(value) FROM transcript;
 
-	-- see the records with amount at key and the key matching values larger than 30
+-- see the records with amount at key and the key matching values larger than 30
+-- include another quote as there is space between 'offer' and 'id'
+-- VALUE -> and JSON_VALUE() are the same thing
 SELECT * FROM transcript WHERE JSON_VALUE(value, '$.amount') > 30;
 SELECT * FROM transcript WHERE JSON_VALUE(value, '$."offer id"') = '9b98b8c7a33c4b65b9aebfe6a799e6d9'; 
 SELECT * FROM transcript WHERE VALUE -> '$."offer id"' = '9b98b8c7a33c4b65b9aebfe6a799e6d9';
-		-- include another quote as there is space between 'offer' and 'id'
-        -- VALUE -> and JSON_VALUE() are the same thing
 	
-    -- extract value in JSON with keys as 'offer id'
+        
+-- extract value in JSON with keys as 'offer id'
 SELECT 
 	VALUE -> '$."offer id"' value_offer_id
 FROM transcript;
 
-    -- records with keys as amount that is not NULL
+
+-- records with keys as amount that is not NULL
 SELECT
 	VALUE -> '$.amount' value_amount
 FROM transcript
 WHERE VALUE -> '$.amount' IS NOT NULL;
 
-	-- count for unique offer id
+
+-- count for unique offer id
 SELECT 
 	JSON_EXTRACT(VALUE, '$."offer id"') AS value_offer_id,
     COUNT(*) AS offer_trans_count
 FROM transcript
 GROUP BY JSON_EXTRACT(VALUE, '$."offer id"'); -- GROUP BY is executed before SELECT
-    
-    -- find people with extracted amount > 10 and SUM amount > 100
+
+
+-- find people with extracted amount > 10 and SUM amount > 100
 SELECT 
 	person,
     SUM(JSON_EXTRACT(VALUE, '$.amount')) AS sum_spending
@@ -156,8 +148,11 @@ HAVING SUM(JSON_EXTRACT(VALUE, '$.amount')) > 100; -- WHERE is executed before G
 
 
 
+
+
 -- preprocessing and create a new table
 	-- turn JSON columns to columns, delete the quotes "" that were also extracted
+    -- use COALESCE to create a column with offer_id as value, if NULL then use 'offer id' as the value, otherwise NULL 
 DROP TABLE transcript_proc;
 CREATE TABLE transcript_proc AS
 SELECT
@@ -172,20 +167,23 @@ SELECT
 FROM transcript
 WHERE person IN (SELECT customer_id FROM profile_proc);
 	-- we have filtered out people 118 years old, the above line applied this filter as well
-	-- COALESCE: create a column with var1 as value, if NULL then use var2 as the value, otherwise NULL
+	
 
 
 
 -- view processed transcript dataset
 SELECT * FROM transcript_proc;
 SELECT * FROM transcript_proc WHERE customer_id = '94de646f7b6041228ca7dec82adb97d2';
-	-- show number of records per person
+
+-- show number of records per person
 SELECT customer_id, COUNT(*) FROM transcript_proc GROUP BY customer_id ORDER BY COUNT(*) DESC;
+
 
 
 
 -- preprocessing step 2: 
 	-- try if time column can be converted to datetime
+    
 CREATE TABLE transcript_proc_temp AS
 SELECT 
 	a.*,
