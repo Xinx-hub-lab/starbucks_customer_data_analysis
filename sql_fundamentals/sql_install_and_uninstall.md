@@ -1,15 +1,17 @@
 
-# How to Install and Uninstall SQL Server and Workbench (MAC)?
+# How to Install and Uninstall SQL Server and Workbench (macOS)
 
-## How to uninstall (completely)?
-Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL workbench.
-
-[Uninstall Flow](https://www.youtube.com/watch?v=PBAnWXKIps8)
+## How to uninstall (completely)
+Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL workbench. Refer to this video for a visual guide on uninstalling: [Uninstall Flow](https://www.youtube.com/watch?v=PBAnWXKIps8)
 (start from 4:50)
 
-1. Go to Setting, Click Uninstall and Confirm
+### Step 1: Uninstallation Process
+- Go to Setting 
+- Click Uninstall
+- Confirm
 
-2. Check if uninstalled successfulling in terminal
+### Step 2: Verify Uninstallation
+Open the terminal and enter the following commands:
 
 ```bash
 mysql
@@ -17,10 +19,11 @@ mysql
 mysql -u root -p
 # zsh: command not found: mysql
 ```
-If the output showed just as above in the comments, it means uninstall is successful
+If you see the messages shown in the comments, the uninstallation was successful.
 
 
-3. Delete Related Folders and Files
+### Step 3: Remove Related Folders and Files
+Execute these commands to remove residual files.
 ```bash
 sudo rm -rf  /usr/local/mysql
 sudo rm -rf  /usr/local/mysql*
@@ -32,25 +35,26 @@ sudo rm -rf  /Library/Receipts/mysql*
 sudo rm -rf  /private/var/db/receipts/*mysql*
 sudo rm -rf  /var/db/receipts/com.mysql.mysql*
 clear
-```
 
-Entered terminal password once for the first command and you do not have to type it again.
-
-```bash
+# Edit host configuration to remove MySQL references
 sudo nano /etc/hostconfig
+# Remove any MySQL lines, save with Control + X, and confirm with Y
 ```
-If some thing exist in the config remove the line.
 
-Use `control + x` to exit. Finally, exit session with `exit` and close the window.
+After entering your password for the first sudo command, subsequent sudo commands won't require it within a short time frame.
+
+### Step 4: Final Cleanup
+
+Exit session with `exit` and close the window.
 
 
-## How to install?
-[Installation Flow](https://www.youtube.com/watch?v=ODA3rWfmzg8)
+## How to install Server and Mysql workbench
+Refer to the following video for a detailed installation guide: [Installation Flow](https://www.youtube.com/watch?v=ODA3rWfmzg8)
 
 
 
 ## Start MySQL
-Open terminal and type the following if server is not running:
+If server is not running, open terminal and type the following:
 ```bash
 sudo /usr/local/mysql/support-files/mysql.server start
 ```
