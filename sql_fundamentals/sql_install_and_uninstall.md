@@ -1,7 +1,7 @@
 
 # How to Install and Uninstall SQL Server and Workbench (macOS)
 
-## How to uninstall (completely)
+## How to Uninstall (completely)
 Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL workbench. Refer to this video for a visual guide on uninstalling: [Uninstall Flow](https://www.youtube.com/watch?v=PBAnWXKIps8)
 (start from 4:50)
 
@@ -48,7 +48,7 @@ After entering your password for the first sudo command, subsequent sudo command
 Exit session with `exit` and close the window.
 
 
-## How to install Server and Mysql workbench
+## How to Install Server and MySQL Workbench
 Refer to the following video for a detailed installation guide: [Installation Flow](https://www.youtube.com/watch?v=ODA3rWfmzg8)
 
 

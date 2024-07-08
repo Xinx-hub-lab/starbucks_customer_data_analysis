@@ -2,7 +2,8 @@
 ###########################################################################################################
 #######################################   Project : Starbucks Customer Data    #####################################
 ###########################################################################################################
-CREATE SCHEMA project;
+
+CREATE SCHEMA IF NOT EXISTS project;
 USE project;
 
 
@@ -15,27 +16,19 @@ USE project;
 -- preprocess and create new table
 	-- one hot encoding for channels column
 	-- upper case + trim for offer_type
+DROP TABLE IF EXISTS portfolio_proc;
 CREATE TABLE portfolio_proc AS
 SELECT 
-	reward, 
-	difficulty, 
-	duration, 
+    reward, 
+    difficulty, 
+    duration, 
     id AS offer_id, 
-    offer_type_proc AS offer_type, 
-    channel_web, 
-    channel_mobile, 
-    channel_email,
-    channel_social
-FROM(
-	SELECT *, 
-		TRIM(UPPER(offer_type)) AS offer_type_proc,
-		CASE WHEN JSON_CONTAINS(channels, '["web"]') THEN 1 ELSE 0 END AS channel_web,
-		CASE WHEN JSON_CONTAINS(channels, '["mobile"]') THEN 1 ELSE 0 END AS channel_mobile,
-		CASE WHEN JSON_CONTAINS(channels, '["email"]') THEN 1 ELSE 0 END AS channel_email,
-		CASE WHEN JSON_CONTAINS(channels, '["social"]') THEN 1 ELSE 0 END AS channel_social
-	FROM portfolio
-) 
-AS process_table1;
+    TRIM(UPPER(offer_type)) AS offer_type, 
+    CASE WHEN JSON_CONTAINS(channels, '["web"]') THEN 1 ELSE 0 END AS channel_web,
+    CASE WHEN JSON_CONTAINS(channels, '["mobile"]') THEN 1 ELSE 0 END AS channel_mobile,
+    CASE WHEN JSON_CONTAINS(channels, '["email"]') THEN 1 ELSE 0 END AS channel_email,
+    CASE WHEN JSON_CONTAINS(channels, '["social"]') THEN 1 ELSE 0 END AS channel_social
+FROM portfolio;
 
 
 -- view the processed dataset
@@ -53,18 +46,9 @@ SELECT * FROM portfolio_proc;
 SELECT * FROM profile;
 SELECT DISTINCT gender FROM profile;
 
-
-
--- there will be error: ERROR CODE 1292 Truncated incorrect INTEGER value: '' when creating the new table
--- need to turn off mysql strict mode 
--- refer to (https://stackoverflow.com/questions/40881773/how-to-turn-on-off-mysql-strict-mode-in-localhost-xampp)
-
--- if we see STRICT_TRANS_TABLES, then it's in strict mode
+-- Disable strict mode to handle invalid integer values
 SHOW VARIABLES LIKE 'sql_mode';  
-
--- turn off strict mode
 set sql_mode='NO_ENGINE_SUBSTITUTION'; 
-
 
 
 
@@ -104,50 +88,12 @@ SELECT COUNT(DISTINCT customer_id) FROM profile_proc;
 
 -- inspectation
 SELECT * FROM transcript;
-
--- see the unique json keys
 SELECT DISTINCT JSON_KEYS(value) FROM transcript;
 
--- see the records with amount at key and the key matching values larger than 30
--- include another quote as there is space between 'offer' and 'id'
--- VALUE -> and JSON_VALUE() are the same thing
+-- Examples of extracting and querying JSON values
 SELECT * FROM transcript WHERE JSON_VALUE(value, '$.amount') > 30;
 SELECT * FROM transcript WHERE JSON_VALUE(value, '$."offer id"') = '9b98b8c7a33c4b65b9aebfe6a799e6d9'; 
 SELECT * FROM transcript WHERE VALUE -> '$."offer id"' = '9b98b8c7a33c4b65b9aebfe6a799e6d9';
-	
-        
--- extract value in JSON with keys as 'offer id'
-SELECT 
-	VALUE -> '$."offer id"' value_offer_id
-FROM transcript;
-
-
--- records with keys as amount that is not NULL
-SELECT
-	VALUE -> '$.amount' value_amount
-FROM transcript
-WHERE VALUE -> '$.amount' IS NOT NULL;
-
-
--- count for unique offer id
-SELECT 
-	JSON_EXTRACT(VALUE, '$."offer id"') AS value_offer_id,
-    COUNT(*) AS offer_trans_count
-FROM transcript
-GROUP BY JSON_EXTRACT(VALUE, '$."offer id"'); -- GROUP BY is executed before SELECT
-
-
--- find people with extracted amount > 10 and SUM amount > 100
-SELECT 
-	person,
-    SUM(JSON_EXTRACT(VALUE, '$.amount')) AS sum_spending
-FROM transcript
-WHERE JSON_EXTRACT(VALUE, '$.amount') > 10
-GROUP BY person
-HAVING SUM(JSON_EXTRACT(VALUE, '$.amount')) > 100; -- WHERE is executed before GROUP BY; order is WHERE, GROUP BY, HAVING, SELECT
-
-
-
 
 
 -- preprocessing and create a new table
@@ -170,7 +116,6 @@ WHERE person IN (SELECT customer_id FROM profile_proc);
 	
 
 
-
 -- view processed transcript dataset
 SELECT * FROM transcript_proc;
 SELECT * FROM transcript_proc WHERE customer_id = '94de646f7b6041228ca7dec82adb97d2';
@@ -183,7 +128,6 @@ SELECT customer_id, COUNT(*) FROM transcript_proc GROUP BY customer_id ORDER BY 
 
 -- preprocessing step 2: 
 	-- try if time column can be converted to datetime
-    
 CREATE TABLE transcript_proc_temp AS
 SELECT 
 	a.*,

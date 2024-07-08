@@ -1,8 +1,7 @@
-Please refer to https://www.datacamp.com/blog/top-sql-interview-questions-and-answers-for-beginners-and-intermediate-practitioners
 
+# SQL Interview Questions
 
-Entry level Questions (make auto question index)
-
+## Entry level:
 1. What are SQL dialects? Give some examples.
 
 2. What are the main applications of SQL?
@@ -47,5 +46,6 @@ data warehouse
 datalake
 WHERE and HAVING
 
-
+## References
+[Datacamp Top SQL Interview Questions](https://www.datacamp.com/blog/top-sql-interview-questions-and-answers-for-beginners-and-intermediate-practitioners)
 
