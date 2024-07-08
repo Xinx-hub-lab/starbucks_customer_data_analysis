@@ -49,11 +49,12 @@ VALUES (1, 'History', 2, 'A'),
 
 			
 -- column name alias using AS
-SELECT * , 'Building1' AS location FROM class;  -- This is creating a column 'location' with 'Building 1' as the constant value 
+-- creating a column 'location' with 'Building 1' as the constant value
+SELECT * , 'Building1' AS location FROM class;   
 SELECT ClassName AS AMY_ClassName FROM class  ;
 
 
--- NULL value
+-- use NULL value
 SELECT * FROM Student WHERE 
 name IS NOT NULL AND 
 age > 21;              
@@ -71,10 +72,8 @@ SELECT *
 FROM student a
 INNER JOIN class b ON a.studentID=b.studentID;
 
--- Consider OUTER JOIN like including with cases of (NULL = valueB, valueA = valueB, valueA = NULL), 
-	-- since NULL value can equal to any value; 
-	-- whereas INNER JOIN are only including cases of (valueA = a valueB), 
-	-- eliminating cases of (valueA = NULL, NULL = valueB).
+-- Consider OUTER JOIN like including with cases of (NULL = valueB, valueA = valueB, valueA = NULL), since NULL value can equal to any value; 
+-- whereas INNER JOIN are only including cases of (valueA = a valueB), eliminating cases of (valueA = NULL, NULL = valueB).
 
 
 
@@ -92,14 +91,16 @@ SELECT * FROM Student a RIGHT JOIN Class b ON a.studentid=b.studentid;
 	-- these records comes FROM two tables, they are appended though they may have duplicates
 	-- UNION on the other hand only append when there is a new value, meaning no duplicates, like 1,2,3,4, we do NOT have 1,2,3 anymore
 
+-- UNION ALL and UNION is different in that UNION ALL is concatenating the FULL LEFT JOIN and FULL RIGHT JOIN,
+	-- which means it has duplicated records, which are exactly the records in the intersection / INNER JOIN
+
 -- UNION is for concatenating, OUTER JOIN is for merging:
 	-- the difference between UNION and OUTER JOIN, See the link for more details: 
 	-- (https://stackoverflow.com/questions/905379/what-is-the-difference-between-join-and-union)
 
 -- However, OUTER JOIN does not work in MySQL, so we have to use UNION (not UNION ALL, be careful) like the 1st query above
 
--- UNION ALL and UNION is different in UNION ALL is concatenating the FULL LEFT JOIN and FULL RIGHT JOIN,
-	-- which means it has duplicated records, which are exactly the records in the intersection / INNER JOIN
+
 
 
 

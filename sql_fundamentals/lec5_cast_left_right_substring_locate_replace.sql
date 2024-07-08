@@ -54,17 +54,18 @@ SELECT COUNT(DISTINCT birthdate_year) FROM(
 -- you have to name the new dataset created by subquery that follows the FROM
 
 -- approach 3 : LEFT(string, number_of_chars)
+-- make sure the string format of date has the same appearance
 SELECT birthdate, LEFT(birthdate,4) AS birthdate_yr FROM customer; 
-	-- make sure the string format of date has the same appearance
+	
 
 -- approach 4  : SUBSTRING(string, start, LENGTH) 
 SELECT birthdate, SUBSTRING(birthdate, 1, 4) AS birthdate_yr FROM customer;
 
 
 -- approach 5 : locate(SUBSTRING, string, start)
-SELECT birthdate, LEFT( birthdate, LOCATE('-', birthdate)-1) AS birthdate_first_occurence FROM customer; 
 	-- start from 1, not 0, different from Python
     -- LOCATE() function returns the position of the FIRST occurrence of a substring in a string
+SELECT birthdate, LEFT( birthdate, LOCATE('-', birthdate)-1) AS birthdate_first_occurence FROM customer; 
 
 
 
