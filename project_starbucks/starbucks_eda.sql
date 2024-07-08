@@ -140,7 +140,21 @@ SELECT * FROM portfolio_proc LIMIT 10;
 SELECT offer_type, COUNT(offer_id) FROM portfolio_proc GROUP BY offer_type; 
 -- bogo, 4 (buy one get one); informational 2; discount 4
 
-
+-- statistics for reward, difficulty, and duration
+SELECT 
+    AVG(reward) AS reward_avg,
+    STDDEV(reward) AS reward_stddev,
+    MIN(reward) AS reward_min,
+    MAX(reward) AS reward_max,
+    AVG(difficulty) AS difficulty_avg,
+    STDDEV(difficulty) AS difficulty_stddev,
+    MIN(difficulty) AS difficulty_min,
+    MAX(difficulty) AS difficulty_max,
+    AVG(duration) AS duration_avg,
+    STDDEV(duration) AS duration_stddev,
+    MIN(duration) AS duration_min,
+    MAX(duration) AS duration_max
+FROM portfolio_proc;
 
 
 ##########################

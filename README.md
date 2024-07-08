@@ -12,45 +12,26 @@ This project aims to study customer demographic groups who actively respond to o
 
 
 ## Datasets
-The datasets were downloaded from [Kaggle](https://www.kaggle.com/datasets/ihormuliar/starbucks-customer-data) and 3 tables are available: `portfolio.csv`, `profile.csv`, `transcript.csv`.
+The datasets were downloaded from [Kaggle](https://www.kaggle.com/datasets/ihormuliar/starbucks-customer-data) and 3 tables are available: `portfolio.csv`, `profile.csv`, `transcript.csv`. Below are further clarifications on variables, partially extracted from initially provided data dictionary. 
+
+### Portfolio
+**Difficulty**: Minimum required spend to complete an offer
+
+**Reward**: Reward given for completing an offer
+
+**Duration**: How many days the offer remains active
+
+### Transcript
+
+**time**: Time in hours. The data begins at time t=0
 
 ## Note for Import
 Arrays within `portfolio.csv` and `transcript.csv` contains **single quotes**, which should be revised to **double quotes** to prevent import error.
 
-## EDA for customer demographics
+## Data Analysis Report Summary
 
-17000
-became member on 2013-2018 July
-
-percentage of gender:
-Female: 41.34%
-Male: 57.23%
-Trans-gender: 1.43%
-
-age 18-101
-age groups
-<30: 0.11; 30-40: 0.1; 40-50: 0.15; 50-60: 0.24; 60-70: 0.20; >70: 0.19;
-
-low income(<50,000): 0.4515
-medium income(>60,000, <100,000):0.4748
-high income(>100,000): 0.0737
-
-
-	-- Member added top count months: 8, 10, 12, 1
-	-- Aug: coincides with the back-to-school seASon, starbucks may offer more discounts for students
-    -- Oct: Halloween, fall seASon discount
-    -- Dec: holiday seASon promotions
-    -- Jan: New year promotions
-
-
-
-
-
-
-
-## Data Cleaning
-
-## Data Analysis Report
+Report[url]
+Visualizations[url]
 
 
 
