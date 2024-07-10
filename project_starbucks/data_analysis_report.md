@@ -65,6 +65,12 @@ The top average monthly growth happens at **August** (back-to-school season, stu
 
 This section displayed 
 
+too few observations and too many predictors, fitting an ANCOVA or ANOVA model can be problematic due to the risk of overfitting and lack of statistical power
+
+duration and difficulty has a large correlation 0.8 (p = 0.005)
+
+difficulty and channel mobile has correlation -0.7, p = 0.014
+
 member_added time series 
 
 customer demographics
