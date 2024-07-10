@@ -128,6 +128,7 @@ SELECT customer_id, COUNT(*) FROM transcript_proc GROUP BY customer_id ORDER BY 
 
 -- preprocessing step 2: 
 	-- try if time column can be converted to datetime
+DROP TABLE transcript_proc_temp;
 CREATE TABLE transcript_proc_temp AS
 SELECT 
 	a.*,
@@ -138,5 +139,7 @@ LEFT JOIN profile_proc b ON a.customer_id = b.customer_id;
 
 	-- there are 2 keys, 'offer id' and 'offer_id', go back to replace 'offer_id' as well, use COALESCE()
 select * from transcript where person='94de646f7b6041228ca7dec82adb97d2' and event='offer completed';
+
+
 
 

@@ -23,7 +23,7 @@ The datasets were downloaded from [Kaggle](https://www.kaggle.com/datasets/ihorm
 
 ### Transcript
 
-**time**: Time in hours. The data begins at time t=0
+**Time**: Time in hours. The data begins at time t=0, when the customer joined as a member.
 
 ## Note for Import
 Arrays within `portfolio.csv` and `transcript.csv` contains **single quotes**, which should be revised to **double quotes** to prevent import error.
