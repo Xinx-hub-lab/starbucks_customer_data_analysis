@@ -30,8 +30,7 @@ Arrays within `portfolio.csv` and `transcript.csv` contains **single quotes**, w
 
 ## Data Analysis Report Summary
 
-Report[url]
-Visualizations[url]
+[Report](https://github.com/Xinx-hub-lab/starbucks_customer_data_analysis/blob/main/project_starbucks/data_analysis_report.md)
 
 
 
