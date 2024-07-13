@@ -11,7 +11,7 @@ library(olsrr)
 
 
 ## import
-setwd('~/Desktop/02_projects/A1_projects_files/B_sql_starbucks_customer_data_analysis/GIT_starbucks/project_starbucks')
+setwd('')
 df = read.csv('offer_response_analysis.csv')
 
 ## preprocess
@@ -86,18 +86,58 @@ ols_step_forward_p(fit_lm, pent =  0.05, prem =  0.05)
 
 
 
+## plot distribution and pattern
+## complete percentage vs. reward
+ggplot(df_proc, aes(x=reward, y=completed_percentage, color = offer_type_encoded)) + 
+  geom_point(size=2) +
+  labs(colour = "Offer Type")
+## complete percentage vs. duration
+ggplot(df_proc, aes(x=duration, y=completed_percentage, color = offer_type_encoded)) + 
+  geom_point(size=2) +
+  labs(colour = "Offer Type")
+## complete percentage distribution
+ggplot(df_proc, aes(x=completed_percentage)) + 
+  geom_histogram()
+## complete percentage distribution
+ggplot(df_proc, aes(x=reward)) + 
+  geom_histogram()
+## complete percentage distribution
+ggplot(df_proc, aes(x=duration)) + 
+  geom_histogram()
+
+
+
+## 1. correlation between covariate X and Y
+summary(lm(completed_percentage ~ reward + duration, df_proc))
+## no significant correlation, assumption 1 violated
+
+## 2. no correlation between X and categorical variable, tested previously, assumption 2 satisfied
+
+## 3. no interaction between categorical variable and continuos variable, assumption 3 satisfied
+ggplot(df_proc, aes(x=duration, y=completed_percentage, color=as.factor(channel_mobile))) +
+  geom_point() +
+  geom_smooth(method='lm') +
+  labs(x='duration', y='Completed percentage', title = 'Check for interaction', color='')
+ggplot(df_proc, aes(x=reward, y=completed_percentage, color=as.factor(channel_mobile))) +
+  geom_point() +
+  geom_smooth(method='lm') +
+  labs(x='reward', y='Completed percentage', title = 'Check for interaction', color='')
+## no need to test for the other 2 pairs of continuous and categorical variables
+
+
 ## ANCOVA
 ## selected 4 features according to above output: channel_mobile; channel_social, reward, duration
 options(contrasts = c('contr.sum', 'comtr.poly'))
 aov2 = aov(lm(completed_percentage ~ 
-                as.factor(channel_mobile) + 
-                as.factor(channel_social) + 
+                channel_mobile + 
+                channel_social + 
                 reward + 
                 duration, 
               df_proc))
 summary(aov2)
 car::Anova(aov2, type='III')
 drop1(aov2,~.,test = 'F')
+
 
 
 

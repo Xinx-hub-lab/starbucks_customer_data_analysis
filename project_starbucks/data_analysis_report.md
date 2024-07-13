@@ -6,6 +6,8 @@
 4. Determine the optimal duration and timing for offers to maximize engagement.
 5. Calculate the customer lifetime value for different segments and understand how offers influence CLV.
 
+<br>
+
 ## Data Cleaning
 ### PROTFOLIO TABLE
 1. One hot encode the `channels` field
@@ -21,6 +23,8 @@
 1. Turn JSON column `value` to columns, delete the quotes that were also extracted
 2. use COALESCE to create a column to combine values of both `offer_id` and `offer id` keys
 3. Turn `time` field to specific timepoint using the time these customers became members
+
+<br>
 
 ## Data Analysis I Report:  EDA
 
@@ -54,26 +58,119 @@ There are **10** distinct offers in total, including bogo, discount and informat
 
 The `difficulty` ranges between 0-20, `reward` ranges between 0-10 and `duration` ranges between 3-10. 
 
-For the customers, the max number of offers delivered / received is **6** and the min number is **1**. 11916 (**80.38%**) customers experienced all 3 events. 
-
-<br>
+For the customers, the max number of offers delivered / received is **6** and the min number is **1**. Most customers with a number of 11916 (**80.38%**) experienced all 3 events. 
 
 They became members between **2013-2018 July**. The largest membership growth happens at **2017**, and the member growth number accelerates year by year except for between 2017-2018.
 The top average monthly growth happens at **August** (back-to-school season, student targeted), **October** (Halloween, fall season), **December** (holiday season), and **January** (New Year), which could be due to promotions based on different events including special seasons and holidays.
 
+<br>
+
 ## Data Analysis II Report
 
-This section displayed 
+### Feature Importance for Offer Response Rate
 
-too few observations and too many predictors, fitting an ANCOVA or ANOVA model can be problematic due to the risk of overfitting and lack of statistical power
+The offer response rate, `completed_percentage`, for each of 10 specific offers and each of the customers, and output 2 tables `customer_response_analysis.csv` and `offer_response_analysis.csv` is calculated by dividing the number of offer completed by the number of offers received, after filtering out informational offers. Statistical models were used to validate the significance of features in these 2 tables for predicting the response rate. 
 
-duration and difficulty has a large correlation 0.8 (p = 0.005)
 
-difficulty and channel mobile has correlation -0.7, p = 0.014
 
-member_added time series 
+In the table `offer_response_analysis.csv`, 2 offers were filtered out since they are informational offers. There were 7  features valid for testing feature importance, with channel_email eliminated as it is a constant. Since we only have 8 observations / offers and 7 features to test, which could cause overfitting and lack of statistical power in statistical analysis. We employed multiple methods to select the most important features. 
 
-customer demographics
+We used pearson correlation plot, which indicated a significant and clear correlation between difficulty and duration ($r$ = 0.8, p = 0.005), difficulty and channel_mobile($r$ = -0.7, p = 0.014), offer type and reward ($r$ = -0.8, p = 0.006). Subsequently, LASSO, RIDGE, and stepwise / backward / forward feature selection were applied for reference of feature selection, which overall favors 4 predictors: `channel_mobile`, `channel_social`, `reward`, `duration`.
+
+#### ANCOVA Table
+| Predictor       | Df | Sum Sq   | Mean Sq | F value | Pr(>F)   | Significance       |
+|-----------------|----|----------|---------|---------|----------|--------------------|
+| channel_mobile  | 1  | 0.08015  | 0.08015 | 51.360  | 0.00560  | **                 |
+| channel_social  | 1  | 0.07263  | 0.07263 | 46.541  | 0.00644  | **                 |
+| reward          | 1  | 0.05163  | 0.05163 | 33.082  | 0.01044  | *                  |
+| duration        | 1  | 0.00190  | 0.00190 | 1.219   | 0.35018  |                    |
+
+#### ANOVA Table (Type III tests)
+| Predictor       | Sum Sq   | Df | F value  | Pr(>F)   | Significance       |
+|-----------------|----------|----|----------|----------|--------------------|
+| channel_mobile  | 0.007953 | 1  | 5.0961   | 0.109182 |                    |
+| channel_social  | 0.102631 | 1  | 65.7649  | 0.003919 | **                 |
+| reward          | 0.027129 | 1  | 17.3839  | 0.025113 | *                  |
+| duration        | 0.001902 | 1  | 1.2189   | 0.350181 |                    |
+
+The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 17.384, p < 0.05) are significant predictors of `completed_percentage`, with `channel_social` having the highest impact. `channel_mobile` shows significance in the ANCOVA summary ($F$ = 51.360, p < 0.05) but not in the Type III ANOVA ($F$ = 5.096, p >0.05), suggesting its effect might be less robust when accounting for other variables.
+`duration` does not significantly affect `completed_percentage`.
+
+<br>
+
+### Feature Importance for Customer Response Rate
+
+For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and there pairwise interactions. 
+
+#### Binomial GLM (without interactions)
+| Predictor   | Estimate    | Pr(>|z|)    |
+|-------------|-------------|-------------|
+| age         | 3.387e-03   | 0.00117 **  |
+| income      | 2.075e-05   | < 2e-16 *** |
+| gender1     | 1.479e-01   | 0.00668 **  |
+| gender2     | -3.792e-01  | 1.28e-12 ***|
+
+#### Binomial GLM (wit interactions)
+| Predictor           | Estimate      | Pr(>|z|)       |
+|---------------------|---------------|----------------|
+| age                 | -8.816e-04    | 0.847726       |
+| income_null         | 1.540e-05     | 0.000284 ***   |
+| gender1             | 7.291e-01     | 0.002026 **    |
+| gender2             | -9.000e-01    | 0.000101 ***   |
+| age:income_null     | 7.608e-08     | 0.178190       |
+| age:gender1         | -3.647e-03    | 0.277319       |
+| age:gender2         | 1.916e-03     | 0.560766       |
+| income_null:gender1 | -5.794e-06    | 0.049265 *     |
+| income_null:gender2 | 6.666e-06     | 0.022580 *     |
+
+#### Beta GLM (without interactions)
+| Predictor   | Estimate      | Pr(>|z|)       |
+|-------------|---------------|----------------|
+| age         | 2.175e-03     | 0.00128 **     |
+| income_null | 1.351e-05     | < 2e-16 ***    |
+| gender1     | 7.816e-02     | 0.01759 *      |
+| gender2     | -2.714e-01    | < 2e-16 ***    |
+
+#### Beta GLM (with interactions)
+| Predictor           | Estimate      | Pr(>|z|)       |
+|---------------------|---------------|----------------|
+| age                 | 2.643e-03     | 0.347676       |
+| income_null         | 1.255e-05     | 6.36e-07 ***   |
+| gender1             | 5.060e-01     | 0.000568 ***   |
+| gender2             | -7.576e-01    | 1.51e-07 ***   |
+| age:income_null     | -5.324e-09    | 0.872847       |
+| age:gender1         | -2.618e-03    | 0.203882       |
+| age:gender2         | 1.445e-03     | 0.476736       |
+| income_null:gender1 | -4.001e-06    | 0.021136 *     |
+| income_null:gender2 | 6.233e-06     | 0.000305 ***   |
+
+Based on the GLM results, `income` and `gender` are significant predictors for both models when not considering interactions. `Age` is also significant in the main effects model. However, when interactions are included, `age` becomes not significant, while `income` and `gender` show significant interactions with each other.
+
+<br>
+
+### Validity of Statistical Results
+The results from statistical analysis could provide evidence of significance of effect from certain predictors to the offer completed percentage. But some assumptions has not been statisfied in analysis above. In Feature Importance for Offer Response Rate we fitted an ANCOVA model, the assumptions are as follows:
+
+1. Independent observations
+2. Normality: the dependent variable Y is normally distributed within each subpopulation (needed when small samples of n < 20).
+5. Linearity: Covariates X and the dependent variable Y are correlated.
+3. Homogeneity: the variance of the dependent variable must be equal over all subpopulations (needed for sharply unequal sample sizes).
+4. Interaction: coefficients for the covariates are equal among all subpopulations / no interaction between categorical variable and covariates.
+
+Due to the small sample size, Assumption 2 and 5 cannot be fully validated, Assumption 1 is violated. Therefore, the results from ANCOVA can only be a reference or a small evidence for the significance of the 4 predictors.
+
+<br>
+
+Strict assumptions were not needed in Feature Importance for Customer Response Rate, which are as follows:
+
+1. Independent observations
+2. The dependent variable Y follows the distribution from the exponential family, specifically restricted by the type of GLM corresponding distribution
+3. Correct link function
+
+According to the histogram of the offer completed percentage, the distribution ranges between 0 and 1, and there is inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age has droped significance when considering interactions, the simpler model may be preferred as we are only targeting at simplicity and interpretability. 
+
+## References:
+[SPSS ANCOVA – Beginners Tutorial](https://www.spss-tutorials.com/spss-ancova-analysis-of-covariance/#ancova-assumptions)
 
 
 
