@@ -232,8 +232,11 @@ ORDER BY percentage_per_group DESC;
 
 
 -- target offers for top segments above
+CREATE TABLE target_customer_offers AS
 SELECT 
-(
+	customer_id,
+    offer_ids
+FROM(
 	WITH target_customer AS (
 		SELECT 
 			customer_id
@@ -251,7 +254,8 @@ SELECT
 	LEFT JOIN portfolio_proc p ON t.offer_id = p.offer_id
 	WHERE event = 'offer completed'
 	GROUP BY t.customer_id
-)
+) AS a;
+
 
 
 
@@ -259,9 +263,9 @@ SELECT
 SELECT 
 	offer_id,
     offer_type,
+    duration,
     completed_percentage 
-FROM offer_response_analysis
-LIMIT 5;
+FROM offer_response_analysis;
 
 
 
@@ -269,7 +273,7 @@ LIMIT 5;
 -- see min and max amount
 SELECT MIN(amount), MAX(amount) FROM transcript_proc_temp;
 
--- additional: average transaction amount for each group
+-- additional: sum transaction amount for each group
 SELECT 
 	gender,
 	CASE WHEN income_zero <60000 THEN 'low_income'
@@ -282,12 +286,12 @@ SELECT
 		WHEN age >=60 AND age <70 THEN '60_70'
 		WHEN age >=70 THEN 'greaterthan70'
 		ELSE NULL END AS age_group,
-	AVG(amount) AS avg_transaction_amount
+	SUM(amount) AS sum_transaction_amount
 FROM transcript_proc_temp a
 LEFT JOIN profile_proc b ON a.customer_id = b.customer_id
 WHERE event = 'transaction'
 GROUP BY gender, income_group, age_group
-ORDER BY avg_transaction_amount DESC;
+ORDER BY sum_transaction_amount DESC;
 
 
 
