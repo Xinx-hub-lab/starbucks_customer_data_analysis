@@ -5,8 +5,6 @@
 3. Identify which channels are most effective for reaching customers and driving offer redemptions.
 4. Determine the optimal duration and timing for offers to maximize engagement.
 
-<br>
-
 ## Data Cleaning
 ### PROTFOLIO TABLE
 1. One hot encode the `channels` field
@@ -22,8 +20,6 @@
 1. Turn JSON column `value` to columns, delete the quotes that were also extracted
 2. use COALESCE to create a column to combine values of both `offer_id` and `offer id` keys
 3. Turn `time` field to specific timepoint using the time these customers became members
-
-<br>
 
 ## Data Analysis I Report:  EDA
 
@@ -55,14 +51,14 @@ There are **10** distinct offers in total, including bogo, discount and informat
 | INFORMATIONAL   | 2  | 0/0                 | 20.00% | NA     |
 | Total           | 10 | NA                  | 100%   | NA     |
 
+<br>
+
 The `difficulty` ranges between 0-20, `reward` ranges between 0-10 and `duration` ranges between 3-10. 
 
 For the customers, the max number of offers delivered / received is **6** and the min number is **1**. Most customers with a number of 11916 (**80.38%**) experienced all 3 events. 
 
 They became members between **2013-2018 July**. The largest membership growth happens at **2017**, and the member growth number accelerates year by year except for between 2017-2018.
 The top average monthly growth happens at **August** (back-to-school season, student targeted), **October** (Halloween, fall season), **December** (holiday season), and **January** (New Year), which could be due to promotions based on different events including special seasons and holidays.
-
-<br>
 
 ## Data Analysis II Report
 
@@ -95,8 +91,6 @@ We used pearson correlation plot, which indicated a significant and clear correl
 The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 17.384, p < 0.05) are significant predictors of `completed_percentage`, with `channel_social` having the highest impact. `channel_mobile` shows significance in the ANCOVA summary ($F$ = 51.360, p < 0.05) but not in the Type III ANOVA ($F$ = 5.096, p >0.05), suggesting its effect might be less robust when accounting for other variables.
 `duration` does not significantly affect `completed_percentage`.
 
-<br>
-
 ### Feature Importance for Customer Response Rate
 
 For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and there pairwise interactions. The models including interactions are in Appendix.
@@ -119,8 +113,6 @@ For the table `customer_response_analysis.csv`, we tested variables including `a
 
 Based on the GLM results, `income` and `gender` are significant predictors for both models when not considering interactions. `Age` is also significant in the main effects model. However, when interactions are included, `age` becomes not significant, while `income` and `gender` show significant interactions with each other.
 
-<br>
-
 ### Validity of Statistical Results
 The results from statistical analysis could provide evidence of significance of effect from certain predictors to the offer completed percentage. But some assumptions has not been statisfied in analysis above. In Feature Importance for Offer Response Rate we fitted an ANCOVA model, the assumptions are as follows:
 
@@ -132,8 +124,6 @@ The results from statistical analysis could provide evidence of significance of 
 
 Due to the small sample size, Assumption 2 and 5 cannot be fully validated, Assumption 1 is violated. Therefore, the results from ANCOVA can only be a reference or a small evidence for the significance of the 4 predictors.
 
-<br>
-
 Strict assumptions were not needed in Feature Importance for Customer Response Rate, which are as follows:
 
 1. Independent observations
@@ -142,7 +132,6 @@ Strict assumptions were not needed in Feature Importance for Customer Response R
 
 According to the histogram of the offer completed percentage, the distribution ranges between 0 and 1, and there is inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age has droped significance when considering interactions, the simpler model may be preferred as we are only targeting at simplicity and interpretability. 
 
-<br>
 
 ## Data Analysis III Report (Conclusion)
 
@@ -187,10 +176,10 @@ According to the top 10 customer segments with highest response rate, a table of
 
 According to the Statistical analysis, the preferred channels to enhance the response rate is **social** and **mobile**, with social as the most significant channel. 
 
-<br>
 
 ## References
 [SPSS ANCOVA – Beginners Tutorial](https://www.spss-tutorials.com/spss-ancova-analysis-of-covariance/#ancova-assumptions)
+
 
 ## Appendix
 
@@ -219,8 +208,6 @@ According to the Statistical analysis, the preferred channels to enhance the res
 | age:gender2         | 1.445e-03     | 0.476736       |
 | income_null:gender1 | -4.001e-06    | 0.021136 *     |
 | income_null:gender2 | 6.233e-06     | 0.000305 ***   |
-
-<br>
 
 ### Targeted Customer Segments (by age)
 | Age Group      | Completed Percentage |
