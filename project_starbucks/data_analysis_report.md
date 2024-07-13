@@ -6,7 +6,10 @@
 4. Determine the optimal duration and timing for offers to maximize engagement.
 
 ## Data Cleaning
-### PROTFOLIO TABLE
+
+The processed datatset were saved in the current folder, named as `portfolio_proc.csv`, `profile_proc.csv`, `transcript_proc.csv`.
+
+### PORTFOLIO TABLE
 1. One hot encode the `channels` field
 2. Upper case and trim for `offer_type` field
 
@@ -132,6 +135,8 @@ Strict assumptions were not needed in Feature Importance for Customer Response R
 
 According to the histogram of the offer completed percentage, the distribution ranges between 0 and 1, and there is inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age has droped significance when considering interactions, the simpler model may be preferred as we are only targeting at simplicity and interpretability. 
 
+Moreover, though we have identified specific predictors for the response rate, the calculated response rate was not real enough, as normal rate would be around 10-20%, whereas the rate value is even larger than 50% per customer and per type of offer. Considering the fact that this dataset was simulated, the results derived from this dataset is not reliable, what can be referred from this report are the methods and process for data analysis. 
+
 
 ## Data Analysis III Report (Conclusion)
 
@@ -170,7 +175,7 @@ The table showed customers of age > 50 and medium income (50,000 - 100,000) pref
 | 004c5799adbf42868b9cff0396190900   | ["ae264e3637204a6fb9bb56bc8210ddfd", "f19421c1d4aa40978ebb69ca19b0e20d", "fafdcd668e3743c1bb461111dcafc2a4", "fafdcd668e3743c1bb461111dcafc2a4", "f19421c1d4aa40978ebb69ca19b0e20d"] |
 | 0056df74b63b4298809f0b375a304cf4   | ["0b1e1539f2cc45b7b9fa7c272da2e1d7", "9b98b8c7a33c4b65b9aebfe6a799e6d9", "2298d6c36e964ae4a3e7e9706d1fb8c2"] |
 
-According to the top 10 customer segments with highest response rate, a table of target customers and their preferred offers was generated. Example is as above.
+According to the top 10 customer segments with highest response rate, a table of target customers and their preferred offers was generated, named as `target_customer_offers.csv`. Example is as above. 
 
 ### Targeted offer ditribution channels
 

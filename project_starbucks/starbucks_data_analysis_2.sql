@@ -6,7 +6,7 @@
 CREATE SCHEMA IF NOT EXISTS project;
 USE project;
 
-/* DATA ANALYSIS II: */
+/* DATA ANALYSIS II-III: */
 
 SELECT * FROM profile_proc LIMIT 10;
 SELECT * FROM portfolio_proc LIMIT 10;
