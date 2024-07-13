@@ -210,6 +210,7 @@ ORDER BY percentage_per_incomegroup DESC;
 
 
 -- get specific group with highest percentage of complete
+-- consider 3 predictors
 SELECT 
 	gender,
 	CASE WHEN income_zero <60000 THEN 'low_income'
@@ -227,6 +228,42 @@ FROM customer_response_analysis
 WHERE completed_percentage >=0.8
 GROUP BY gender, income_group, age_group
 ORDER BY percentage_per_group DESC;
+
+
+
+-- target offers for top segments above
+SELECT 
+(
+	WITH target_customer AS (
+		SELECT 
+			customer_id
+		FROM customer_response_analysis
+		WHERE completed_percentage >= 0.8
+		  AND income_null >= 60000
+		  AND income_null < 100000
+		  AND age >= 40
+	)
+	SELECT DISTINCT
+		t.customer_id, 
+		JSON_ARRAYAGG(t.offer_id) AS offer_ids
+	FROM transcript_proc_temp t
+	JOIN target_customer tc ON t.customer_id = tc.customer_id
+	LEFT JOIN portfolio_proc p ON t.offer_id = p.offer_id
+	WHERE event = 'offer completed'
+	GROUP BY t.customer_id
+)
+
+
+
+-- select the 5 top offers
+SELECT 
+	offer_id,
+    offer_type,
+    completed_percentage 
+FROM offer_response_analysis
+LIMIT 5;
+
+
 
 
 -- see min and max amount

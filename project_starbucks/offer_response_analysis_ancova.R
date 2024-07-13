@@ -91,16 +91,20 @@ ols_step_forward_p(fit_lm, pent =  0.05, prem =  0.05)
 ggplot(df_proc, aes(x=reward, y=completed_percentage, color = offer_type_encoded)) + 
   geom_point(size=2) +
   labs(colour = "Offer Type")
+
 ## complete percentage vs. duration
 ggplot(df_proc, aes(x=duration, y=completed_percentage, color = offer_type_encoded)) + 
   geom_point(size=2) +
   labs(colour = "Offer Type")
+
 ## complete percentage distribution
 ggplot(df_proc, aes(x=completed_percentage)) + 
   geom_histogram()
+
 ## complete percentage distribution
 ggplot(df_proc, aes(x=reward)) + 
   geom_histogram()
+
 ## complete percentage distribution
 ggplot(df_proc, aes(x=duration)) + 
   geom_histogram()

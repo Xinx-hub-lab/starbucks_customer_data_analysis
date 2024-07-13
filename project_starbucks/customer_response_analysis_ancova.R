@@ -62,24 +62,36 @@ ggcorrplot(corr)
 
 
 ## GLM, no assumptions to validate
+
+
 ## binomial
+## without interaction
 glm_bino1 = glm(completed_percentage ~ age + income_null + gender,
                 df_proc,
                 family = binomial(link = "logit"))
 summary(glm_bino1)
+
+## with interaction
 glm_bino2 = glm(completed_percentage ~ (age + income_null + gender)^2,
                df_proc,
                family = binomial(link = "logit"))
 summary(glm_bino2)
 
+
+
 ## beta
+## 0 and 1 not allowed, change 1 to 0.9999 and 0 to 0.0001
 df_proc1 = df_proc
 df_proc1$completed_percentage = ifelse(df_proc1$completed_percentage == 0, 0.0001, 
                                        df_proc1$completed_percentage)
 df_proc1$completed_percentage <- ifelse(df_proc1$completed_percentage == 1, 0.9999, 
                                         df_proc1$completed_percentage)
+
+## without interaction
 glm_beta1 <- betareg(completed_percentage ~ age + income_null + gender, df_proc1)
 summary(glm_beta1)
+
+## with interaction
 glm_beta2 <- betareg(completed_percentage ~ (age + income_null + gender)^2, df_proc1)
 summary(glm_beta2)
 
