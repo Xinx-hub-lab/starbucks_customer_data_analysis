@@ -2,7 +2,9 @@
 # How to Install and Uninstall SQL Server and Workbench (macOS)
 
 ## How to Uninstall (completely)
-Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL workbench. Refer to this video for a visual guide on uninstalling: [Uninstall Flow](https://www.youtube.com/watch?v=PBAnWXKIps8)
+Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL workbench. Refer to video below for a visual guide on uninstalling: 
+
+[Uninstallation Flow](https://www.youtube.com/watch?v=PBAnWXKIps8)
 (start from 4:50)
 
 ### Step 1: Uninstallation Process
@@ -11,7 +13,7 @@ Uninstalling can help handle crashes and abnormal quits in SQL server and MySQL 
 - Confirm
 
 ### Step 2: Verify Uninstallation
-Open the terminal and enter the following commands:
+Open the terminal and enter the following:
 
 ```bash
 mysql
@@ -25,6 +27,7 @@ If you see the messages shown in the comments, the uninstallation was successful
 ### Step 3: Remove Related Folders and Files
 Execute these commands to remove residual files.
 ```bash
+# Remove related files
 sudo rm -rf  /usr/local/mysql
 sudo rm -rf  /usr/local/mysql*
 sudo rm -rf  /usr/local/var/mysql
@@ -47,11 +50,8 @@ After entering your password for the first sudo command, subsequent sudo command
 
 Exit session with `exit` and close the window.
 
-
 ## How to Install Server and MySQL Workbench
 Refer to the following video for a detailed installation guide: [Installation Flow](https://www.youtube.com/watch?v=ODA3rWfmzg8)
-
-
 
 ## Start MySQL
 If server is not running, open terminal and type the following:

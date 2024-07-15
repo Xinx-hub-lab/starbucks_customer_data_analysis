@@ -1,6 +1,8 @@
 
+Starbucks Customer Data Analysis Report
+
 ## Project Objectives
-1. Identify which offer types generate the highest response rates. 
+1. Identify which offer types generate the highest response rates, formal analogy for offer completed percentage. 
 2. Understand how different customer segments (segmented by demos like age, gender, income) respond to various offers and identify high-value customer groups.
 3. Identify which channels are most effective for reaching customers and driving offer redemptions.
 4. Determine the optimal duration and timing for offers to maximize engagement.
@@ -26,7 +28,9 @@ The processed datatset were saved in the current folder, named as `portfolio_pro
 
 ## Data Analysis I Report:  EDA
 
-The number of unique customers decreased from **17,000** to **14,825** after data cleaning, with age ranges between **18-101**, and their income ranges between **30,000-120,000**. The detailed demographics group percentage are as follows:
+### Customers Info
+
+The number of unique customers was **17,000**, which decreased to **14,825** after data cleaning. Their age ranges between **18-101**, and their income ranges between **30,000-120,000**. The detailed demographics group percentage are as follows:
 
 | **Category**     | **Group**          | **Percentage** |
 |------------------|--------------------|----------------|
@@ -45,7 +49,19 @@ The number of unique customers decreased from **17,000** to **14,825** after dat
 
 <br>
 
-There are **10** distinct offers in total, including bogo, discount and informational offers. The `transcript` dataset showed **4** distinct events: **offer received**, **offer viewed**,  **offer complete** and **transaction**. We consider an offer is completed when an offer experienced all 3 events (offer received > offer viewed > offer complete). Table below showed the counts of each offer type, their specific combination of `difficulty` and `reward`, the offer received percentage, and their completed percentage. 
+We consider an offer is completed when an offer experienced all 3 events **(offer received > offer viewed > offer complete)**. For the customers, the max number of offers delivered / received is **6** and the min number is **1**. Most customers, with a number of 11916 (**80.38%**) experienced all 3 events / completed **at least one offer**. 
+
+The customers in the dataset became members between **2013-2018 July**. The largest membership growth happened at **2017**, and the member growth number accelerated year by year except for between 2017-2018.
+
+The top average monthly growth happened at **August** (back-to-school season, student targeted), **October** (Halloween, fall season), **December** (holiday season), and **January** (New Year), which could be due to promotions based on yearly events including special seasons and holidays.
+
+### Offers Details
+
+There were **10** distinct offers in total, including BOGO, DISCOUNT and INFORMATIONAL offers. The `transcript` dataset showed **4** distinct events: **offer received**, **offer viewed**,  **offer complete** and **transaction**. 
+
+Table below showed the counts of each offer type, their specific combination of `difficulty` and `reward`, the offer received percentage, and their completed percentage. 
+
+The `difficulty` ranges between 0-20, `reward` ranges between 0-10 and `duration` ranges between 3-10. 
 
 | **Offer Type**  | **Counts** | **Difficulty / Reward** | **Delivered Percentage** | **Completed Percentage** |
 |-----------------|----|---------------------|--------|--------|
@@ -56,24 +72,15 @@ There are **10** distinct offers in total, including bogo, discount and informat
 
 <br>
 
-The `difficulty` ranges between 0-20, `reward` ranges between 0-10 and `duration` ranges between 3-10. 
+## Data Analysis II Report: Feature Importance & Target Customers and Offers
 
-For the customers, the max number of offers delivered / received is **6** and the min number is **1**. Most customers with a number of 11916 (**80.38%**) experienced all 3 events. 
-
-They became members between **2013-2018 July**. The largest membership growth happens at **2017**, and the member growth number accelerates year by year except for between 2017-2018.
-The top average monthly growth happens at **August** (back-to-school season, student targeted), **October** (Halloween, fall season), **December** (holiday season), and **January** (New Year), which could be due to promotions based on different events including special seasons and holidays.
-
-## Data Analysis II Report
+The offer response rate, `completed_percentage`, for each of 10 specific offers and each of the customers, and output 2 tables `customer_response_analysis.csv` and `offer_response_analysis.csv` was calculated by dividing the number of offer completed by the number of offers received, after filtering out informational offers. Statistical models were used to validate the significance of features in these 2 tables for predicting the response rate. 
 
 ### Feature Importance for Offer Response Rate
 
-The offer response rate, `completed_percentage`, for each of 10 specific offers and each of the customers, and output 2 tables `customer_response_analysis.csv` and `offer_response_analysis.csv` is calculated by dividing the number of offer completed by the number of offers received, after filtering out informational offers. Statistical models were used to validate the significance of features in these 2 tables for predicting the response rate. 
+In the table `offer_response_analysis.csv`, 2 informational offers were filtered out. There were 7 features valid for testing feature importance, with the constant feature `channel_email` eliminated. Since there were only 8 observations / offers and 7 features to test, which could cause overfitting and lack of statistical power in statistical analysis, multiple methods were conducted to select the most important features. 
 
-
-
-In the table `offer_response_analysis.csv`, 2 offers were filtered out since they are informational offers. There were 7  features valid for testing feature importance, with channel_email eliminated as it is a constant. Since we only have 8 observations / offers and 7 features to test, which could cause overfitting and lack of statistical power in statistical analysis. We employed multiple methods to select the most important features. 
-
-We used pearson correlation plot, which indicated a significant and clear correlation between difficulty and duration ($r$ = 0.8, p = 0.005), difficulty and channel_mobile($r$ = -0.7, p = 0.014), offer type and reward ($r$ = -0.8, p = 0.006). Subsequently, LASSO, RIDGE, and stepwise / backward / forward feature selection were applied for reference of feature selection, which overall favors 4 predictors: `channel_mobile`, `channel_social`, `reward`, `duration`.
+We used pearson correlation plot, which indicated a significant and clear correlation between difficulty and duration ($r$ = 0.8, p = 0.005), difficulty and channel_mobile($r$ = -0.7, p = 0.014), offer type and reward ($r$ = -0.8, p = 0.006). Subsequently, **LASSO**, **RIDGE**, and **stepwise / backward / forward feature selection** were applied for overall reference of feature selection, which overall favors 4 predictors: `channel_mobile`, `channel_social`, `reward`, `duration`.
 
 #### ANCOVA Table
 | Predictor       | Df | Sum Sq   | Mean Sq | F value | Pr(>F)   | Significance       |
@@ -91,12 +98,11 @@ We used pearson correlation plot, which indicated a significant and clear correl
 | reward          | 0.027129 | 1  | 17.3839  | 0.025113 | *                  |
 | duration        | 0.001902 | 1  | 1.2189   | 0.350181 |                    |
 
-The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 17.384, p < 0.05) are significant predictors of `completed_percentage`, with `channel_social` having the highest impact. `channel_mobile` shows significance in the ANCOVA summary ($F$ = 51.360, p < 0.05) but not in the Type III ANOVA ($F$ = 5.096, p >0.05), suggesting its effect might be less robust when accounting for other variables.
-`duration` does not significantly affect `completed_percentage`.
+The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 17.384, p < 0.05) were significant predictors of `completed_percentage`, with `channel_social` having the highest impact. `channel_mobile` showed significance in the ANCOVA summary ($F$ = 51.360, p < 0.05) but not in the Type III ANOVA ($F$ = 5.096, p >0.05), which suggested that its effect might be less robust when accounting for other variables. `duration` was not a significant predictor for `completed_percentage`.
 
 ### Feature Importance for Customer Response Rate
 
-For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and there pairwise interactions. The models including interactions are in Appendix.
+For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and their pairwise interactions. The model output including interactions are in Appendix.
 
 #### Binomial GLM (without interactions)
 | Predictor   | Estimate    | P value     |
@@ -110,14 +116,19 @@ For the table `customer_response_analysis.csv`, we tested variables including `a
 | Predictor   | Estimate      | P value        |
 |-------------|---------------|----------------|
 | age         | 2.175e-03     | 0.00128 **     |
-| income_null | 1.351e-05     | < 2e-16 ***    |
+| income      | 1.351e-05     | < 2e-16 ***    |
 | gender1     | 7.816e-02     | 0.01759 *      |
 | gender2     | -2.714e-01    | < 2e-16 ***    |
 
-Based on the GLM results, `income` and `gender` are significant predictors for both models when not considering interactions. `Age` is also significant in the main effects model. However, when interactions are included, `age` becomes not significant, while `income` and `gender` show significant interactions with each other.
+Based on the GLM results, `income` and `gender` were significant predictors for both models when not considering interactions. `Age` was also significant in the main effects model. However, when interactions were included, `age` became not significant, while `income` and `gender` showed significant interactions with each other.
 
-### Validity of Statistical Results
-The results from statistical analysis could provide evidence of significance of effect from certain predictors to the offer completed percentage. But some assumptions has not been statisfied in analysis above. In Feature Importance for Offer Response Rate we fitted an ANCOVA model, the assumptions are as follows:
+Based on the feature importance analysis above, we generated an overall report of specific target customers and their preferrable offers, which were listed in [README.md](https://github.com/Xinx-hub-lab/starbucks_customer_data_analysis/blob/main/README.md).
+
+
+### Discussion on Validity of Statistical Results
+The results from statistical analysis could provide evidence of significance of effect from certain predictors to the offer completed percentage. But some assumptions have not been statisfied in analysis. 
+
+In Feature Importance for Offer Response Rate we fitted an ANCOVA model, the assumptions are as follows:
 
 1. Independent observations
 2. Normality: the dependent variable Y is normally distributed within each subpopulation (needed when small samples of n < 20).
@@ -125,7 +136,7 @@ The results from statistical analysis could provide evidence of significance of 
 3. Homogeneity: the variance of the dependent variable must be equal over all subpopulations (needed for sharply unequal sample sizes).
 4. Interaction: coefficients for the covariates are equal among all subpopulations / no interaction between categorical variable and covariates.
 
-Due to the small sample size, Assumption 2 and 5 cannot be fully validated, Assumption 1 is violated. Therefore, the results from ANCOVA can only be a reference or a small evidence for the significance of the 4 predictors.
+Due to the small sample size, Assumption 2 and 5 cannot be fully validated, Assumption 1 is violated. Therefore, the results from ANCOVA can only be a reference, or a small evidence for the significance of the 4 predictors.
 
 Strict assumptions were not needed in Feature Importance for Customer Response Rate, which are as follows:
 
@@ -133,54 +144,7 @@ Strict assumptions were not needed in Feature Importance for Customer Response R
 2. The dependent variable Y follows the distribution from the exponential family, specifically restricted by the type of GLM corresponding distribution
 3. Correct link function
 
-According to the histogram of the offer completed percentage, the distribution ranges between 0 and 1, and there is inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age has droped significance when considering interactions, the simpler model may be preferred as we are only targeting at simplicity and interpretability. 
-
-Moreover, though we have identified specific predictors for the response rate, the calculated response rate was not real enough, as normal rate would be around 10-20%, whereas the rate value is even larger than 50% per customer and per type of offer. Considering the fact that this dataset was simulated, the results derived from this dataset is not reliable, what can be referred from this report are the methods and process for data analysis. 
-
-
-## Data Analysis III Report (Conclusion)
-
-### Top 5 Offers with Highest Response Rate
-
-| Offer ID                          | Offer Type | Duration | Completed Percentage |
-|-----------------------------------|------------|----------| ---------------------|
-| fafdcd668e3743c1bb461111dcafc2a4  | DISCOUNT   | 10       | 0.6986               |
-| 2298d6c36e964ae4a3e7e9706d1fb8c2  | DISCOUNT   | 7        | 0.6669               |
-| f19421c1d4aa40978ebb69ca19b0e20d  | BOGO       | 5        | 0.5497               |
-| 4d5c57ea9a6940dd891ad53e9dbe8da0  | BOGO       | 5        | 0.4453               |
-| ae264e3637204a6fb9bb56bc8210ddfd  | BOGO       | 7        | 0.4404               |
-
-There is no preferrable duration for offers based on the response rate. 
-
-### Top 10 Targeted Customer Segments (by age, income, gender)
-
-| Gender | Income Group   | Age Group       | Completed Percentage   |
-|--------|----------------|-----------------|---------|
-| F      | medium_income  | 50_60           | 0.0865  |
-| M      | medium_income  | 50_60           | 0.0775  |
-| F      | medium_income  | greaterthan70   | 0.0743  |
-| F      | medium_income  | 60_70           | 0.0705  |
-| M      | medium_income  | 60_70           | 0.0598  |
-| M      | medium_income  | greaterthan70   | 0.0544  |
-| M      | medium_income  | 40_50           | 0.0443  |
-| F      | medium_income  | 40_50           | 0.0427  |
-
-The table showed customers of age > 50 and medium income (50,000 - 100,000) prefers to use offers for purchase which would be the future target customer. The top segments with highest sum of transaction amount intersected exactly with the table above, with subtle change in order.
-
-### Targeted Customer and Their Preferrable Offers (Example of 3 customers)
-
-| Customer ID                        | Offer IDs                                                                 |
-|------------------------------------|---------------------------------------------------------------------------|
-| 004b041fbfe44859945daa2c7f79ee64   | ["fafdcd668e3743c1bb461111dcafc2a4", "f19421c1d4aa40978ebb69ca19b0e20d"]  |
-| 004c5799adbf42868b9cff0396190900   | ["ae264e3637204a6fb9bb56bc8210ddfd", "f19421c1d4aa40978ebb69ca19b0e20d", "fafdcd668e3743c1bb461111dcafc2a4", "fafdcd668e3743c1bb461111dcafc2a4", "f19421c1d4aa40978ebb69ca19b0e20d"] |
-| 0056df74b63b4298809f0b375a304cf4   | ["0b1e1539f2cc45b7b9fa7c272da2e1d7", "9b98b8c7a33c4b65b9aebfe6a799e6d9", "2298d6c36e964ae4a3e7e9706d1fb8c2"] |
-
-According to the top 10 customer segments with highest response rate, a table of target customers and their preferred offers was generated, named as `target_customer_offers.csv`. Example is as above. 
-
-### Targeted offer ditribution channels
-
-According to the Statistical analysis, the preferred channels to enhance the response rate is **social** and **mobile**, with social as the most significant channel. 
-
+According to the histogram of the offer completed percentage, the distribution ranged between 0 and 1, and there was inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age's significance has dropped when considering interactions, which may indicate more specified feature importance, the simpler model may be preferred as we were targeted at simplicity and interpretability. 
 
 ## References
 [SPSS ANCOVA – Beginners Tutorial](https://www.spss-tutorials.com/spss-ancova-analysis-of-covariance/#ancova-assumptions)
@@ -232,11 +196,11 @@ According to the Statistical analysis, the preferred channels to enhance the res
 | O      | 0.0186               |
 
 ### Targeted Customer Segments (by income)
-| Income Group  | Proportion |
-|---------------|------------|
-| medium_income | 0.5841     |
-| low_income    | 0.3183     |
-| high_income   | 0.0976     |
+| Income Group  | Completed Percentage |
+|---------------|----------------------|
+| medium_income | 0.5841               |
+| low_income    | 0.3183               |
+| high_income   | 0.0976               |
 
 
 

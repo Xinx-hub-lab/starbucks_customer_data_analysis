@@ -1,18 +1,19 @@
 
+library(dplyr)
+library(ggplot2)
+library(ggcorrplot)
+library(gridExtra)
 library(car)
 library(carData)
 library(MASS)
-library(dplyr) ## contains %>% and mutate
-library(ggplot2)
-library(ggcorrplot)
 library(glmnet)
 library(olsrr)
-
-
+library(betareg)
 
 ## import
-setwd('')
+### setwd()
 df = read.csv('offer_response_analysis.csv')
+
 
 ## preprocess
 df_proc = df %>% 
@@ -30,6 +31,31 @@ df_proc = df %>%
   select(-offer_id, -offer_type, -channel_email) 
 
 df_proc
+
+
+## plot distribution and pattern
+## complete percentage vs. reward
+ggplot(df_proc, aes(x=reward, y=completed_percentage, color = offer_type_encoded)) + 
+  geom_point(size=2) +
+  labs(colour = "Offer Type")
+
+## complete percentage vs. duration
+ggplot(df_proc, aes(x=duration, y=completed_percentage, color = offer_type_encoded)) + 
+  geom_point(size=2) +
+  labs(colour = "Offer Type")
+
+## plot completed_percentage dist
+ggplot(df_proc, aes(x=completed_percentage)) + 
+  geom_histogram()
+
+## plot reward dist
+ggplot(df_proc, aes(x=reward)) + 
+  geom_histogram()
+
+## plot duration dist
+ggplot(df_proc, aes(x=duration)) + 
+  geom_histogram()
+
 
 
 ## correlation plot
@@ -67,7 +93,7 @@ coef(fit.lasso)
 
 
 
-## ridge for confirming variable importance
+## confirming variable importance by ridge
 fit.ridge = glmnet(X, y, alpha = 0)
 plot(fit.ridge, xvar = 'lambda', label = T)
 plot(fit.ridge, xvar = 'dev', label = T)
@@ -83,31 +109,6 @@ fit_lm = lm(completed_percentage ~ .-difficulty -offer_type_encoded, df_proc)
 ols_step_both_p(fit_lm, pent =  0.05, prem =  0.05)
 ols_step_backward_p(fit_lm, pent =  0.05, prem =  0.05)
 ols_step_forward_p(fit_lm, pent =  0.05, prem =  0.05)
-
-
-
-## plot distribution and pattern
-## complete percentage vs. reward
-ggplot(df_proc, aes(x=reward, y=completed_percentage, color = offer_type_encoded)) + 
-  geom_point(size=2) +
-  labs(colour = "Offer Type")
-
-## complete percentage vs. duration
-ggplot(df_proc, aes(x=duration, y=completed_percentage, color = offer_type_encoded)) + 
-  geom_point(size=2) +
-  labs(colour = "Offer Type")
-
-## complete percentage distribution
-ggplot(df_proc, aes(x=completed_percentage)) + 
-  geom_histogram()
-
-## complete percentage distribution
-ggplot(df_proc, aes(x=reward)) + 
-  geom_histogram()
-
-## complete percentage distribution
-ggplot(df_proc, aes(x=duration)) + 
-  geom_histogram()
 
 
 

@@ -6,7 +6,7 @@
 CREATE SCHEMA IF NOT EXISTS project;
 USE project;
 
-/* DATA ANALYSIS II-III: */
+/* DATA ANALYSIS II-III: Target Customers and Offers */
 
 SELECT * FROM profile_proc LIMIT 10;
 SELECT * FROM portfolio_proc LIMIT 10;
@@ -51,8 +51,10 @@ LEFT JOIN portfolio_proc d ON c.offer_id = d.offer_id
 WHERE (completed_count / received_count) > 0.4
 ORDER BY completed_percentage DESC;
 -- listed 5 offers with completing percentage > 0.4
+
+
 -- test with ANOVA and ANCOVA
--- channel_mobile, channel_social, reward are significant predictors
+-- channel_mobile, channel_social, reward are significant predictors, duration less significant
 
 
 
