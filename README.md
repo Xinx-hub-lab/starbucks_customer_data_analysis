@@ -9,28 +9,34 @@ This project aims to study customer demographic groups who actively respond to o
 3. Identify which channels are most effective for reaching customers and driving offer redemptions.
 4. Determine the optimal duration and timing for offers to maximize engagement.
 
+## Dataset License and Acknowledgment
+This project utilizes data under the **Community Data License Agreement – Permissive, Version 1.0 (CDLA-Permissive-1.0)**. This license allows for the use, modification, and sharing of data freely as long as the conditions outlined in the license are met.
+
 ## Datasets
 The dataset was downloaded from [Kaggle](https://www.kaggle.com/datasets/ihormuliar/starbucks-customer-data) and 3 tables are available: `portfolio.csv`, `profile.csv`, `transcript.csv`. Below are further clarifications on variables, partially extracted from initially provided data dictionary. 
 
 ### PORTFOLIO
-**Difficulty**: Minimum required spend to complete an offer
+- **Difficulty**: Minimum required spend to complete an offer
 
-**Reward**: Reward given for completing an offer
+- **Reward**: Reward given for completing an offer
 
-**Duration**: How many days the offer remains active
+- **Duration**: How many days the offer remains active
 
 ### TRANSCRIPT
 
-**Time**: Time in hours. The data begins at time t=0, when the customer joined as a member.
+- **Time**: Time in hours. The data begins at time t=0, when the customer joined as a member.
 
 ## Note for Import
-Arrays within `portfolio.csv` and `transcript.csv` contains **single quotes**, which should be revised to **double quotes** to prevent import error.
+Arrays within `portfolio.csv` and `transcript.csv` contains **single quotes**, which should be revised to **double quotes** to prevent import error in MySQL Workbench.
 
 ## Data Analysis Report
 
-[Data Analysis Report](https://github.com/Xinx-hub-lab/starbucks_customer_data_analysis/blob/main/project_starbucks/data_analysis_report.md) included summary of the datasets, Exploratory Data Analysis, Feature Importance Analysis with statistical methods.
+[Data Analysis Report](https://github.com/Xinx-hub-lab/starbucks_customer_data_analysis/blob/main/project_starbucks/data_analysis_report.md) included the following:
+- Summary of the Tables
+- Exploratory Data Analysis
+- Feature Importance Analysis with statistical Modeling.
 
-## Conclusion, Customer Targets and Offer Delivering Strategy
+## Conclusion: Customer Targets and Offer Delivering Strategy
 
 ### Important Predictors for Offer Response Rate
 
@@ -38,7 +44,7 @@ From the offers aspect, offer distribution channels is important, with **mobile*
 
 From the customers aspect, **age**, **gender**, **income** are all significant predictors. Therefore, the customers were segmented by all the 3 predictors and analysed based on offer completed rate.
 
-Specific preferred customer segments, and detailed target customers with specific offers were generated, listed in following sections.
+Specific preferred customer segments, and detailed target customers with specific offers were generated, listed in following subsections.
 
 ### Top 5 Offers with Highest Response Rate (Descending Order)
 

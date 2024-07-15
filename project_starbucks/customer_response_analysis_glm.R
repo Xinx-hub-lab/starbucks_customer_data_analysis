@@ -18,11 +18,11 @@ df = read.csv('customer_response_analysis.csv')
 
 ## preprocess
 df_proc = df %>% 
-  ## convert gender to factors
+  ## convert gender to factors + merged trans_gender to female
   mutate( 
-    gender = as.factor(gender)) %>%
+    gender = as.factor(ifelse(gender == 'M', 1, 0))) %>%
   ## drop useless variables
-  select(age, gender, income_null, 
+  dplyr::select(age, gender, income_null, 
          completed_percentage, bogo_complete_percentage, discount_complete_percentage)
 head(df)
 head(df_proc)
@@ -59,7 +59,7 @@ ggsave("customer_var_dist.png", plot = dist_plot, width = 10, height = 6)
 df_corr_plt = df %>% 
   mutate( 
     gender = ifelse(gender == 'M', 1, 0)) %>%
-  select(age, gender, income_null, 
+  dplyr::select(age, gender, income_null, 
          completed_percentage)
 
 corr = cor(df_corr_plt, method = "pearson") %>% round(1)
@@ -104,6 +104,21 @@ summary(glm_beta1)
 ## with interaction
 glm_beta2 <- betareg(completed_percentage ~ (age + income_null + gender)^2, df_proc1)
 summary(glm_beta2)
+
+
+
+## LOGISTIC
+## without interaction
+glm_logistic1 <- glm(completed_percentage ~ age + income_null + gender, 
+                     df_proc, 
+                     family = binomial(link = "logit"))
+summary(glm_logistic1)
+
+## with interaction
+glm_logistic2 <- glm(completed_percentage ~ (age + income_null + gender)^2, 
+                     df_proc, 
+                     family = binomial(link = "logit"))
+summary(glm_logistic2)
 
 
 

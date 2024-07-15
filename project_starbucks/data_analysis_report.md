@@ -9,7 +9,7 @@ Starbucks Customer Data Analysis Report
 
 ## Data Cleaning
 
-The processed datatset were saved in the current folder, named as `portfolio_proc.csv`, `profile_proc.csv`, `transcript_proc.csv`.
+The processed datatset were saved in the current folder, named as `portfolio_proc.csv`, `profile_proc.csv`, `transcript_proc_temp.csv`.
 
 ### PORTFOLIO TABLE
 1. One hot encode the `channels` field
@@ -30,7 +30,7 @@ The processed datatset were saved in the current folder, named as `portfolio_pro
 
 ### Customers Info
 
-The number of unique customers was **17,000**, which decreased to **14,825** after data cleaning. Their age ranges between **18-101**, and their income ranges between **30,000-120,000**. The detailed demographics group percentage are as follows:
+The number of unique customers was **17,000**, which decreased to **14,825** after data cleaning. Their age ranges between **18-101**, and their income ranges between **30,000-120,000**. Customers were segmented by `age` and `income` respectively. The boundaries of income levels were roughly determined based on the median household income adjusted for household size of $62,804 in 2014 reported by Pew reserach Center[1]. The detailed demographics group percentage are as follows:
 
 | **Category**     | **Group**          | **Percentage** |
 |------------------|--------------------|----------------|
@@ -104,7 +104,7 @@ The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 
 
 For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and their pairwise interactions. The model output including interactions are in Appendix.
 
-#### Binomial GLM (without interactions)
+#### Binomial, Beta, Logistic GLM (without interactions)
 | Predictor   | Estimate    | P value     |
 |-------------|-------------|-------------|
 | age         | 3.387e-03   | 0.00117 **  |
@@ -113,12 +113,15 @@ For the table `customer_response_analysis.csv`, we tested variables including `a
 | gender2     | -3.792e-01  | 1.28e-12 ***|
 
 #### Beta GLM (without interactions)
-| Predictor   | Estimate      | P value        |
-|-------------|---------------|----------------|
-| age         | 2.175e-03     | 0.00128 **     |
-| income      | 1.351e-05     | < 2e-16 ***    |
-| gender1     | 7.816e-02     | 0.01759 *      |
-| gender2     | -2.714e-01    | < 2e-16 ***    |
+| Estimate      | P value        |
+|---------------|----------------|
+| 2.175e-03     | 0.00128 **     |
+| 1.351e-05     | < 2e-16 ***    |
+| 7.816e-02     | 0.01759 *      |
+| -2.714e-01    | < 2e-16 ***    |
+
+#### Logistic GLM (without interactions)
+
 
 Based on the GLM results, `income` and `gender` were significant predictors for both models when not considering interactions. `Age` was also significant in the main effects model. However, when interactions were included, `age` became not significant, while `income` and `gender` showed significant interactions with each other.
 
