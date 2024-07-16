@@ -107,18 +107,3 @@ summary(glm_beta2)
 
 
 
-## LOGISTIC
-## without interaction
-glm_logistic1 <- glm(completed_percentage ~ age + income_null + gender, 
-                     df_proc, 
-                     family = binomial(link = "logit"))
-summary(glm_logistic1)
-
-## with interaction
-glm_logistic2 <- glm(completed_percentage ~ (age + income_null + gender)^2, 
-                     df_proc, 
-                     family = binomial(link = "logit"))
-summary(glm_logistic2)
-
-
-

@@ -211,7 +211,7 @@ ORDER BY percentage_per_incomegroup DESC;
 
 
 
--- get specific group with highest percentage of complete
+-- get top customer segments representing the majority among customers with offer response rate >= 80%
 -- consider 3 predictors
 SELECT 
 	gender,
@@ -237,7 +237,7 @@ ORDER BY percentage_per_group DESC;
 CREATE TABLE target_customer_offers AS
 SELECT 
 	customer_id,
-    offer_ids
+    preferred_offers
 FROM(
 	WITH target_customer AS (
 		SELECT 
@@ -250,14 +250,13 @@ FROM(
 	)
 	SELECT DISTINCT
 		t.customer_id, 
-		JSON_ARRAYAGG(t.offer_id) AS offer_ids
+		JSON_OBJECTAGG(t.offer_id, p.offer_type) AS preferred_offers
 	FROM transcript_proc_temp t
 	JOIN target_customer tc ON t.customer_id = tc.customer_id
 	LEFT JOIN portfolio_proc p ON t.offer_id = p.offer_id
 	WHERE event = 'offer completed'
 	GROUP BY t.customer_id
 ) AS a;
-
 
 
 
@@ -268,7 +267,6 @@ SELECT
     duration,
     completed_percentage 
 FROM offer_response_analysis;
-
 
 
 

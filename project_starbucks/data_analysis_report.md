@@ -1,5 +1,5 @@
 
-Starbucks Customer Data Analysis Report
+# Starbucks Customer Data Analysis Report
 
 ## Project Objectives
 1. Identify which offer types generate the highest response rates, formal analogy for offer completed percentage. 
@@ -9,7 +9,7 @@ Starbucks Customer Data Analysis Report
 
 ## Data Cleaning
 
-The processed datatset were saved in the current folder, named as `portfolio_proc.csv`, `profile_proc.csv`, `transcript_proc_temp.csv`.
+The processed datatset were saved in the current folder, named as `portfolio_proc.csv`, `profile_proc.csv`, `transcript_proc_temp.csv`. Detailed processing steps are listed as follows:
 
 ### PORTFOLIO TABLE
 1. One hot encode the `channels` field
@@ -30,7 +30,7 @@ The processed datatset were saved in the current folder, named as `portfolio_pro
 
 ### Customers Info
 
-The number of unique customers was **17,000**, which decreased to **14,825** after data cleaning. Their age ranges between **18-101**, and their income ranges between **30,000-120,000**. Customers were segmented by `age` and `income` respectively. The boundaries of income levels were roughly determined based on the median household income adjusted for household size of $62,804 in 2014 reported by Pew reserach Center[1]. The detailed demographics group percentage are as follows:
+The number of unique customers was **17,000**, which decreased to **14,825** after data cleaning. Their age ranges between **18-101**, and their income ranges between **30,000-120,000**. Customers were segmented by `age` and `income` respectively. The detailed demographics group percentage are as follows:
 
 | **Category**     | **Group**          | **Percentage** |
 |------------------|--------------------|----------------|
@@ -72,13 +72,13 @@ The `difficulty` ranges between 0-20, `reward` ranges between 0-10 and `duration
 
 <br>
 
-## Data Analysis II Report: Feature Importance & Target Customers and Offers
+## Data Analysis II Report: Feature Importance for Offer Response Rate
 
-The offer response rate, `completed_percentage`, for each of 10 specific offers and each of the customers, and output 2 tables `customer_response_analysis.csv` and `offer_response_analysis.csv` was calculated by dividing the number of offer completed by the number of offers received, after filtering out informational offers. Statistical models were used to validate the significance of features in these 2 tables for predicting the response rate. 
+The offer response rate, `completed_percentage`, for each of 10 specific offers and each of the customers, and output 2 tables `customer_response_analysis.csv` and `offer_response_analysis.csv` was calculated by dividing the number of offer completed by the number of offers received, after **filtering out informational offers**. Statistical models were used to validate the significance of features in these 2 tables for predicting the response rate. 
 
 ### Feature Importance for Offer Response Rate
 
-In the table `offer_response_analysis.csv`, 2 informational offers were filtered out. There were 7 features valid for testing feature importance, with the constant feature `channel_email` eliminated. Since there were only 8 observations / offers and 7 features to test, which could cause overfitting and lack of statistical power in statistical analysis, multiple methods were conducted to select the most important features. 
+In the table `offer_response_analysis.csv`, 2 informational offers were filtered out. There were 7 features valid for testing feature importance, with the constant feature `channel_email` eliminated. Since there were only 8 observations / offers and 7 features to test, which could cause overfitting and lack of statistical power in statistical analysis, multiple feature selection methods were conducted to identify the most important features. 
 
 We used pearson correlation plot, which indicated a significant and clear correlation between difficulty and duration ($r$ = 0.8, p = 0.005), difficulty and channel_mobile($r$ = -0.7, p = 0.014), offer type and reward ($r$ = -0.8, p = 0.006). Subsequently, **LASSO**, **RIDGE**, and **stepwise / backward / forward feature selection** were applied for overall reference of feature selection, which overall favors 4 predictors: `channel_mobile`, `channel_social`, `reward`, `duration`.
 
@@ -104,26 +104,21 @@ The results showed `channel_social` ($F$ = 65.765, p <0.01) and `reward` ($F$ = 
 
 For the table `customer_response_analysis.csv`, we tested variables including `age`, `gender`, `income`, and their pairwise interactions. The model output including interactions are in Appendix.
 
-#### Binomial, Beta, Logistic GLM (without interactions)
-| Predictor   | Estimate    | P value     |
-|-------------|-------------|-------------|
-| age         | 3.387e-03   | 0.00117 **  |
-| income      | 2.075e-05   | < 2e-16 *** |
-| gender1     | 1.479e-01   | 0.00668 **  |
-| gender2     | -3.792e-01  | 1.28e-12 ***|
+#### Binomial GLM (without interactions)
+| Variable    | Estimate  | P-value | Significance |
+|-------------|-----------|---------|--------------|
+| age         | 3.383e-03 | 0.00119 | **          |
+| income  | 2.073e-05 | < 2e-16 | ***         |
+| gender     | -5.302e-01| < 2e-16 | ***         |
 
 #### Beta GLM (without interactions)
-| Estimate      | P value        |
-|---------------|----------------|
-| 2.175e-03     | 0.00128 **     |
-| 1.351e-05     | < 2e-16 ***    |
-| 7.816e-02     | 0.01759 *      |
-| -2.714e-01    | < 2e-16 ***    |
+| Variable    | Estimate  | P-value | Significance |
+|-------------|-----------|---------|--------------|
+| age         | 2.169e-03 | 0.00133 | **          |
+| income  | 1.348e-05 | < 2e-16 | ***         |
+| gender     | -3.537e-01| < 2e-16 | ***         |
 
-#### Logistic GLM (without interactions)
-
-
-Based on the GLM results, `income` and `gender` were significant predictors for both models when not considering interactions. `Age` was also significant in the main effects model. However, when interactions were included, `age` became not significant, while `income` and `gender` showed significant interactions with each other.
+Based on the GLM results, `income` and `gender` were significant predictors for both models when not considering interactions. `Age` was also significant in the main effects model with lower significance. However, when interactions were included, `age` became not significant, while `income` and `gender` showed significant interactions with each other.
 
 Based on the feature importance analysis above, we generated an overall report of specific target customers and their preferrable offers, which were listed in [README.md](https://github.com/Xinx-hub-lab/starbucks_customer_data_analysis/blob/main/README.md).
 
@@ -147,7 +142,7 @@ Strict assumptions were not needed in Feature Importance for Customer Response R
 2. The dependent variable Y follows the distribution from the exponential family, specifically restricted by the type of GLM corresponding distribution
 3. Correct link function
 
-According to the histogram of the offer completed percentage, the distribution ranged between 0 and 1, and there was inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age's significance has dropped when considering interactions, which may indicate more specified feature importance, the simpler model may be preferred as we were targeted at simplicity and interpretability. 
+According to the histogram of the offer completed percentage, the distribution ranged between 0 and 1, and there was inflation at 0 and 1, we chose Binomial and Beta GLM to fit the data. Though age's significance has dropped when considering interactions, which may indicate more specified feature importance, the simpler model may be preferred for higher simplicity and interpretability. 
 
 ## References
 [SPSS ANCOVA – Beginners Tutorial](https://www.spss-tutorials.com/spss-ancova-analysis-of-covariance/#ancova-assumptions)
@@ -156,30 +151,24 @@ According to the histogram of the offer completed percentage, the distribution r
 ## Appendix
 
 #### Binomial GLM (with interactions)
-| Predictor           | Estimate      | P value        |
-|---------------------|---------------|----------------|
-| age                 | -8.816e-04    | 0.847726       |
-| income_null         | 1.540e-05     | 0.000284 ***   |
-| gender1             | 7.291e-01     | 0.002026 **    |
-| gender2             | -9.000e-01    | 0.000101 ***   |
-| age:income_null     | 7.608e-08     | 0.178190       |
-| age:gender1         | -3.647e-03    | 0.277319       |
-| age:gender2         | 1.916e-03     | 0.560766       |
-| income_null:gender1 | -5.794e-06    | 0.049265 *     |
-| income_null:gender2 | 6.666e-06     | 0.022580 *     |
+| Variable              | Estimate     | P-value   | Significance |
+|-----------------------|--------------|-----------|--------------|
+| age                   | -4.187e-03   | 0.27823   |              |
+| income           | 9.873e-06    | 0.00604   | **           |
+| gender               | -1.613e+00   | < 2e-16   | ***          |
+| age:income       | 7.310e-08    | 0.19500   |              |
+| age:gender           | 5.389e-03    | 0.01328   | *            |
+| income:gender   | 1.235e-05    | 1.86e-11  | ***          |
 
 #### Beta GLM (with interactions)
-| Predictor           | Estimate      | P value        |
-|---------------------|---------------|----------------|
-| age                 | 2.643e-03     | 0.347676       |
-| income_null         | 1.255e-05     | 6.36e-07 ***   |
-| gender1             | 5.060e-01     | 0.000568 ***   |
-| gender2             | -7.576e-01    | 1.51e-07 ***   |
-| age:income_null     | -5.324e-09    | 0.872847       |
-| age:gender1         | -2.618e-03    | 0.203882       |
-| age:gender2         | 1.445e-03     | 0.476736       |
-| income_null:gender1 | -4.001e-06    | 0.021136 *     |
-| income_null:gender2 | 6.233e-06     | 0.000305 ***   |
+| Variable              | Estimate     | P-value   | Significance |
+|-----------------------|--------------|-----------|--------------|
+| age                   | 2.370e-04    | 0.92067   |              |
+| income           | 8.644e-06    | 4.68e-05  | ***          |
+| gender               | -1.259e+00   | < 2e-16   | ***          |
+| age:income       | -6.978e-09   | 0.83359   |              |
+| age:gender           | 3.946e-03    | 0.00434   | **           |
+| income:gender   | 1.023e-05    | < 2e-16   | ***          |
 
 ### Targeted Customer Segments (by age)
 | Age Group      | Completed Percentage |
