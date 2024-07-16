@@ -70,7 +70,7 @@ The table below displays the top customer segments representing the majority amo
 | M      | medium_income  | 40_50           | 0.0443  |
 | F      | medium_income  | 40_50           | 0.0427  |
 
-The table showed customers of **age > 40** and **medium income (50,000 - 100,000)** who prefer to use offers for purchase. The customer segments with the highest total transaction amounts align exactly with those identified in this table, albeit with minor differences in the order.
+The table showed customers of **age > 40** and **medium income (60,000 - 100,000)** who prefer to use offers for purchase. The customer segments with the highest total transaction amounts align exactly with those identified in this table, albeit with minor differences in the order.
 
 Therefore, these demographics will be prioritized as future target customer segments.
 
